@@ -1,0 +1,220 @@
+<style>
+body { margin: 0; padding: 0; }
+
+h1{
+    font-size: 18px;
+}
+
+h2{
+    line-height: normal;
+    font-size: 16px;
+}
+
+h3 {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+
+h4 {
+    font-size: 12px;
+    margin: 15px;
+}
+
+p {
+    font-size: 12px;
+    margin: 0px;
+}
+
+/**
+* position for the map
+* on the page */
+#map {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+/**
+* Set rules for how the map overlays
+* (information box and legend) will be displayed
+* on the page. */
+.map-overlay {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: #fff;
+    margin-right: 0px;
+    font-family: Arial, sans-serif;
+    overflow: auto;
+    border-radius: 5px;
+  }
+  
+  #legend {
+    top: 0;
+    margin-top: 10px;
+    padding: 10px;
+    box-shadow: 0 1px 2px rgba(0 0 0 0.1);
+    line-height: 18px;
+    margin-bottom: 10px;
+    width: 350px;
+    margin-right: 10px;
+    background-color: #eeeee4;
+  }
+  
+  .legend-key {
+    display: inline-block;
+    border-radius: 20%;
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+  }
+
+  .checkbox_button label{
+   font-size: 13px;
+  }
+
+  .map-overlay .imd-legend h2{
+    font-family: "Arial";
+    font-size: 14px;
+   }
+
+   .map-overlay .imd-legend p{
+    font-family: "Arial";
+    font-weight: 400;
+    font-size: 12px;
+   }
+
+   .map-overlay .info h2{
+    font-family: "Arial";
+    font-size: 12px;
+    margin: 0 0 0 0;
+    line-height: 40px;
+}
+  
+
+  .circle {
+    float: left;
+    height: 15px;
+    width: 15px;
+    border-radius: 15px;
+    clear: both;
+    margin-right: 2px;
+  }
+
+  .box-1st {
+    float: left;
+    height: 15px;
+    width: 15px;
+    border-radius: 3px;
+    clear: both;
+    margin-right: 9px;
+    background-color: #41070c;
+  }
+
+  .box-2nd {
+    float: left;
+    height: 15px;
+    width: 15px;
+    border-radius: 3px;
+    clear: both;
+    margin-right: 9px;
+    background-color: #691715;
+  }
+
+  .box-3rd {
+    float: left;
+    height: 15px;
+    width: 15px;
+    border-radius: 3px;
+    clear: both;
+    margin-right: 9px;
+    background-color: #82201b;
+  }
+
+  .box-4th {
+    float: left;
+    height: 15px;
+    width: 15px;
+    border-radius: 3px;
+    clear: both;
+    margin-right: 9px;
+    background-color: #9a3427;
+  }
+
+  .box-5th {
+    float: left;
+    height: 15px;
+    width: 15px;
+    border-radius: 3px;
+    clear: both;
+    margin-right: 9px;
+    background-color: #a4503b;
+  }
+
+  .box-6th {
+    float: left;
+    height: 15px;
+    width: 15px;
+    border-radius: 3px;
+    clear: both;
+    margin-right: 9px;
+    background-color: #a66a54;
+  }
+
+  .box-7th {
+    float: left;
+    height: 15px;
+    width: 15px;
+    border-radius: 3px;
+    clear: both;
+    margin-right: 9px;
+    background-color: #a98574;
+  }
+
+  .box-8th {
+    float: left;
+    height: 15px;
+    width: 15px;
+    border-radius: 3px;
+    clear: both;
+    margin-right: 9px;
+    background-color: #af9e94;
+  }
+
+  .box-9th {
+    float: left;
+    height: 15px;
+    width: 15px;
+    border-radius: 3px;
+    clear: both;
+    margin-right: 9px;
+    background-color: #b1aba8;
+  }
+
+  .box-10th {
+    float: left;
+    height: 15px;
+    width: 15px;
+    border-radius: 3px;
+    clear: both;
+    margin-right: 9px;
+    background-color: #bbbab9;
+  }
+
+  
+
+  
+
+  .mapboxgl-popup {
+    max-width: 400px;
+    font:
+        9px/9px 'Helvetica Neue',
+        Arial,
+        Helvetica,
+        sans-serif;
+    }
+</style>
+
+

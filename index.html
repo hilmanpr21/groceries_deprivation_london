@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <title>Change building color based on zoom level</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.js"></script>
+    
+    <link href='style/style.css' rel='stylesheet' />
+</head>
+<body>
+    <div id="map"></div>
+    
+
+    <div class="map-overlay" id="legend">
+        <h1>XXX</h1>
+        <div id="pd"><p>lililili</p></div>
+        <div class="checkbox_button">
+            <h2>Groceries Level</h2>
+            <input type="checkbox" id="aldi" name="aldi_checkbox" checked>
+                <label for="aldi_checkbox" style="font-size: 12px;">£ - ALDI</label>
+                <div class='circle' style="background-color:#4d004b;"></div><br>
+            <input type="checkbox" id="lidl" name="lidl" checked>
+                <label for="lidl_checkbox" style="font-size: 12px;">£ - Lidl</label>
+                <div class='circle' style="background-color:#810f7c;"></div><br>
+            <input type="checkbox" id="asda" name="asda" checked>
+                <label for="asda_checkbox" style="font-size: 12px;">£ - Asda</label>
+                <div class='circle' style="background-color:#88419d;"></div><br>
+            <input type="checkbox" id="coop" name="coop" checked>
+                <label for="coop_checkbox">££ - Co-op</label>
+                <div class='circle' style="background-color:#8c6bb1;"></div><br>
+            <input type="checkbox" id="tesco" name="tesco" checked>
+                <label for="tesco_checkbox">££ - Tesco</label>
+                <div class='circle' style="background-color:#8c96c6;"></div><br>
+            <input type="checkbox" id="sainsburys" name="sainsburys" checked>
+                <label for="sainsburys_checkbox">££ - Sainsbury's (££)</label>
+                <div class='circle' style="background-color:#9ebcda;"></div><br>
+            <input type="checkbox" id="waitrose" name="waitrose" checked>
+                <label for="waitrose_checkbox">£££ - Waitrose</label>
+                <div class='circle' style="background-color:#bfd3e6;"></div><br>
+            
+        </div>
+        <div><h2>Index of Multiple Deprivation Decile 2019</h2></div>
+        <div class="checkbox_button">
+            <input type="checkbox" id="imd" name="imd_checkbox"checked>
+                <label for="imd_checkbox">Index of Multiple Deprivation Decile Layer</label><br><br>
+        </div>
+        <div class="imd-legend">
+            <div class='box-1st'></div><div><p>Most Deprived</p></div>
+            <div class='box-2nd'></div><div><p>2nd</p></div>
+            <div class='box-3rd'></div><div><p>3rd</p></div>
+            <div class='box-4th'></div><div><p>4th</p></div>
+            <div class='box-5th'></div><div><p>5th</p></div>
+            <div class='box-6th'></div><div><p>6th</p></div>
+            <div class='box-7th'></div><div><p>7th</p></div>
+            <div class='box-8th'></div><div><p>8th</p></div>
+            <div class='box-9th'></div><div><p>9th</p></div>
+            <div class='box-10th'></div><div><p>Least Deprived</p></div>
+        </div>
+        
+        <div  id="info">
+            <h2>Hover To see the Info!</h2>
+        </div>
+        <br>
+
+        <div class="checkbox_button">
+            <input type="checkbox" id="walking_buffer" name="walking_buffer" unchecked>
+            <label for="walking_buffer">15 minutes walking buffer</label><br>
+        </div>
+        
+        
+    </div>
+
+
+    <script>
+        
+        mapboxgl.accessToken = 'pk.eyJ1IjoiaGlsbWFucHIyMSIsImEiOiJjbGQxbGhycTAwZG01M3BxcWV5ejB2ZGtzIn0.wnQW51k0xp5SEd1ggujsiA';
+        
+        const map = new mapboxgl.Map({
+            container: 'map', // container ID
+            style: 'mapbox://styles/hilmanpr21/cm1pfpqqa00re01qrhaqz05fw', // style URL
+            center:  [0.0, 51.5], // starting position [lng, lat]
+            zoom: 10, // starting zoom
+            minzoom: 9
+        });
+
+
+        map.on('load', () => {
+            map.addLayer({
+                    id: 'imd_layer',
+                    type: 'fill',
+                    source: {
+                        type: 'vector',
+                        url: 'mapbox://hilmanpr21.8wfxr2p9' //tileset ID
+                    }, 
+                    'source-layer': 'imd_2019_london_cleaned-amlkal', // tileset name
+                    'paint': {
+                        'fill-color': [
+                            'interpolate',
+                            ['linear'],
+                            ['get', 'london_imd_decile'],
+                            1,
+                            '#67000d',
+                            2,
+                            '#a50f15',
+                            3,
+                            '#cb181d',
+                            4,
+                            '#ef3b2c',
+                            5,
+                            '#fb6a4a',
+                            6,
+                            '#fc9272',
+                            7,
+                            '#fcbba1',
+                            8,
+                            '#fee0d2',
+                            9,
+                            '#fff5f0',
+                            10,
+                            '#fcf7f5'
+
+                        ],
+                        'fill-opacity': 0.5 
+                    }
+            });
+
+            // add walking layer
+            map.addLayer({
+                    id: 'aldi_walking',
+                    type: 'fill',
+                    source: {
+                        type: 'vector',
+                        url: 'mapbox://hilmanpr21.bl9xur6y' //tileset ID
+                    }, 
+                    'source-layer': 'aldi_walking-6stndo', // tileset name
+                    'paint': {
+                        'fill-color': '#c2c4c3',
+                        'fill-opacity': 0.5 
+                    },
+                    layout: {
+                        'visibility': 'none'  // Initially hidden
+                    }
+            });
+
+            map.addLayer({
+                    id: 'asda_walking',
+                    type: 'fill',
+                    source: {
+                        type: 'vector',
+                        url: 'mapbox://hilmanpr21.akchdzt5' //tileset ID
+                    }, 
+                    'source-layer': 'asda_walking-1hc9a1', // tileset name
+                    'paint': {
+                        'fill-color': '#c2c4c3',
+                        'fill-opacity': 0.5 
+                    },
+                    layout: {
+                        'visibility': 'none'  // Initially hidden
+                    }
+            });
+
+            map.addLayer({
+                    id: 'coop_walking',
+                    type: 'fill',
+                    source: {
+                        type: 'vector',
+                        url: 'mapbox://hilmanpr21.1xzep35s' //tileset ID
+                    }, 
+                    'source-layer': 'coop_walking-0z5v59', // tileset name
+                    'paint': {
+                        'fill-color': '#c2c4c3',
+                        'fill-opacity': 0.5 
+                    },
+                    layout: {
+                        'visibility': 'none'  // Initially hidden
+                    }
+            });
+
+            map.addLayer({
+                    id: 'lidl_walking',
+                    type: 'fill',
+                    source: {
+                        type: 'vector',
+                        url: 'mapbox://hilmanpr21.5hwxzg8p' //tileset ID
+                    }, 
+                    'source-layer': 'lidl_walking-852dfd', // tileset name
+                    'paint': {
+                        'fill-color': '#c2c4c3',
+                        'fill-opacity': 0.5 
+                    },
+                    layout: {
+                        'visibility': 'none'  // Initially hidden
+                    }
+            });
+
+            map.addLayer({
+                    id: 'sainsburys_walking',
+                    type: 'fill',
+                    source: {
+                        type: 'vector',
+                        url: 'mapbox://hilmanpr21.5t8vbyam' //tileset ID
+                    }, 
+                    'source-layer': 'sainsburys_walking-d3kuqo', // tileset name
+                    'paint': {
+                        'fill-color': '#c2c4c3',
+                        'fill-opacity': 0.5 
+                    },
+                    layout: {
+                        'visibility': 'none'  // Initially hidden
+                    }
+            });
+
+            map.addLayer({
+                    id: 'tesco_walking',
+                    type: 'fill',
+                    source: {
+                        type: 'vector',
+                        url: 'mapbox://hilmanpr21.3h7v1qsx' //tileset ID
+                    }, 
+                    'source-layer': 'tesco_walking-3ygvik', // tileset name
+                    'paint': {
+                        'fill-color': '#c2c4c3',
+                        'fill-opacity': 0.5 
+                    },
+                    layout: {
+                        'visibility': 'none'  // Initially hidden
+                    }
+            });
+
+            map.addLayer({
+                    id: 'waitrose_walking',
+                    type: 'fill',
+                    source: {
+                        type: 'vector',
+                        url: 'mapbox://hilmanpr21.8ibzm6yq' //tileset ID
+                    }, 
+                    'source-layer': 'waitrose_walking-7inlh0', // tileset name
+                    'paint': {
+                        'fill-color': '#c2c4c3',
+                        'fill-opacity': 0.5 
+                    },
+                    layout: {
+                        'visibility': 'none'  // Initially hidden
+                    }
+            });
+
+
+            
+            // add point data
+            map.addLayer({
+                id: 'aldi_layer',
+                type: 'circle',
+                source : {
+                    type: 'vector',
+                    url: 'mapbox://hilmanpr21.3czt0mwk'
+                },
+                'source-layer' :'aldi_cleaned-4bcljs',
+                'paint': {
+                    'circle-radius': 5,
+                    'circle-color': '#4d004b'
+                }   
+            });
+
+            map.addLayer({
+                id: 'asda_layer',
+                type: 'circle',
+                source : {
+                    type: 'vector',
+                    url: 'mapbox://hilmanpr21.43z3ygeb'
+                },
+                'source-layer' :'asda_cleaned-5v2mjd',
+                'paint': {
+                    'circle-radius': 5,
+                    'circle-color': '#88419d'
+                }   
+            });
+
+            map.addLayer({
+                id: 'coop_layer',
+                type: 'circle',
+                source : {
+                    type: 'vector',
+                    url: 'mapbox://hilmanpr21.1towfrgq'
+                },
+                'source-layer' :'co_op_cleaned-bmojfa',
+                'paint': {
+                    'circle-radius': 5,
+                    'circle-color': '#8c6bb1'
+                }   
+            });
+
+            map.addLayer({
+                id: 'lidl_layer',
+                type: 'circle',
+                source : {
+                    type: 'vector',
+                    url: 'mapbox://hilmanpr21.bipfhe06'
+                },
+                'source-layer' :'lidl_cleaned-1p0lnc',
+                'paint': {
+                    'circle-radius': 5,
+                    'circle-color': '#810f7c'
+                }   
+            });
+
+            map.addLayer({
+                id: 'sainsburys_layer',
+                type: 'circle',
+                source : {
+                    type: 'vector',
+                    url: 'mapbox://hilmanpr21.31wtfv3z'
+                },
+                'source-layer' :'sainsburys_cleaned-13h6ic',
+                'paint': {
+                    'circle-radius': 5,
+                    'circle-color': '#9ebcda'
+                }   
+            });
+
+            map.addLayer({
+                id: 'tesco_layer',
+                type: 'circle',
+                source : {
+                    type: 'vector',
+                    url: 'mapbox://hilmanpr21.908og93n'
+                },
+                'source-layer' :'tesco_cleaned-b4vfih',
+                'paint': {
+                    'circle-radius': 5,
+                    'circle-color': '#8c96c6'
+                }   
+            });
+
+            map.addLayer({
+                id: 'waitrose_layer',
+                type: 'circle',
+                source : {
+                    type: 'vector',
+                    url: 'mapbox://hilmanpr21.86g0u4l9'
+                },
+                'source-layer' :'waitrose_cleaned-49coc6',
+                'paint': {
+                    'circle-radius': 5,
+                    'circle-color': '#bfd3e6'
+                }   
+            });
+
+            
+
+            
+
+
+            
+            // Add event Listener for turning off IMD checkbox
+            var checkbox_imd = document.getElementById('imd'); //var to make a new variable called 'checkbox_imd' that later will be used to identify in 'if'
+            // Add event listener for checkbox state changes
+            checkbox_imd.addEventListener('change', function(){
+                if (checkbox_imd.checked){
+                    // Turn on the layer
+                    map.setLayoutProperty('imd_layer', 'visibility', 'visible');
+                } else{
+                    // Turn of the layer
+                    map.setLayoutProperty('imd_layer', 'visibility', 'none');
+                }
+            });
+            
+            
+            // Add event Listener for turning off ALDI checkbox
+            var checkbox_aldi = document.getElementById('aldi');
+            // Add event listener for checkbox state changes
+            checkbox_aldi.addEventListener('change', function(){
+                if (checkbox_aldi.checked){
+                    // Turn on the layer
+                    map.setLayoutProperty('aldi_layer', 'visibility', 'visible');
+                } else{
+                    // Turn of the layer
+                    map.setLayoutProperty('aldi_layer', 'visibility', 'none');
+                }
+            });
+
+            // Add event Listener for turning off lidl checkbox
+            var checkbox_lidl = document.getElementById('lidl');
+            // Add event listener for checkbox state changes
+            checkbox_lidl.addEventListener('change', function(){
+                if (checkbox_lidl.checked){
+                    // Turn on the layer
+                    map.setLayoutProperty('lidl_layer', 'visibility', 'visible');
+                } else{
+                    // Turn of the layer
+                    map.setLayoutProperty('lidl_layer', 'visibility', 'none');
+                }
+            });
+
+            // Add event Listener for turning off asda checkbox
+            var checkbox_asda = document.getElementById('asda');
+            // Add event listener for checkbox state changes
+            checkbox_asda.addEventListener('change', function(){
+                if (checkbox_asda.checked){
+                    // Turn on the layer
+                    map.setLayoutProperty('asda_layer', 'visibility', 'visible');
+                } else{
+                    // Turn of the layer
+                    map.setLayoutProperty('asda_layer', 'visibility', 'none');
+                }
+            });
+
+            // Add event Listener for turning off coop checkbox
+            var checkbox_coop = document.getElementById('coop');
+            // Add event listener for checkbox state changes
+            checkbox_coop.addEventListener('change', function(){
+                if (checkbox_coop.checked){
+                    // Turn on the layer
+                    map.setLayoutProperty('coop_layer', 'visibility', 'visible');
+                } else{
+                    // Turn of the layer
+                    map.setLayoutProperty('coop_layer', 'visibility', 'none');
+                }
+            });
+
+            // Add event Listener for turning off tesco checkbox
+            var checkbox_tesco = document.getElementById('tesco');
+            // Add event listener for checkbox state changes
+            checkbox_tesco.addEventListener('change', function(){
+                if (checkbox_tesco.checked){
+                    // Turn on the layer
+                    map.setLayoutProperty('tesco_layer', 'visibility', 'visible');
+                } else{
+                    // Turn of the layer
+                    map.setLayoutProperty('tesco_layer', 'visibility', 'none');
+                }
+            });
+
+            // Add event Listener for turning off Sainsbury's checkbox
+            var checkbox_sainsburys = document.getElementById('sainsburys');
+            // Add event listener for checkbox state changes
+            checkbox_sainsburys.addEventListener('change', function(){
+                if (checkbox_sainsburys.checked){
+                    // Turn on the layer
+                    map.setLayoutProperty('sainsburys_layer', 'visibility', 'visible');
+                } else{
+                    // Turn of the layer
+                    map.setLayoutProperty('sainsburys_layer', 'visibility', 'none');
+                }
+            });
+
+            // Add event Listener for turning off Waitrose checkbox
+            var checkbox_waitrose = document.getElementById('waitrose');
+            // Add event listener for checkbox state changes
+            checkbox_waitrose.addEventListener('change', function(){
+                if (checkbox_waitrose.checked){
+                    // Turn on the layer
+                    map.setLayoutProperty('waitrose_layer', 'visibility', 'visible');
+                } else{
+                    // Turn of the layer
+                    map.setLayoutProperty('waitrose_layer', 'visibility', 'none');
+                }
+            });
+            
+            // Add event Listener for turning off Walking checkbox
+            var checkbox_walking = document.getElementById('walking_buffer');
+            // Add event listener for checkbox state changes
+            checkbox_walking.addEventListener('change', function(){
+                if (checkbox_walking.checked){
+                    // Turn on the layer
+                    map.setLayoutProperty('aldi_walking', 'visibility', 'visible');
+                    map.setLayoutProperty('asda_walking', 'visibility', 'visible');
+                    map.setLayoutProperty('coop_walking', 'visibility', 'visible');
+                    map.setLayoutProperty('lidl_walking', 'visibility', 'visible');
+                    map.setLayoutProperty('sainsburys_walking', 'visibility', 'visible');
+                    map.setLayoutProperty('tesco_walking', 'visibility', 'visible');
+                    map.setLayoutProperty('waitrose_walking', 'visibility', 'visible');
+                } else{
+                    // Turn of the layer
+                    map.setLayoutProperty('aldi_walking', 'visibility', 'none');
+                    map.setLayoutProperty('asda_walking', 'visibility', 'none');
+                    map.setLayoutProperty('coop_walking', 'visibility', 'none');
+                    map.setLayoutProperty('lidl_walking', 'visibility', 'none');
+                    map.setLayoutProperty('sainsburys_walking', 'visibility', 'none');
+                    map.setLayoutProperty('tesco_walking', 'visibility', 'none');
+                    map.setLayoutProperty('waitrose_walking', 'visibility', 'none');
+                }
+            });
+
+            // change info on hover
+            map.on('mousemove', (event) => {
+                    const lsoa = map.queryRenderedFeatures(event.point, 
+                    {
+                        layers: ['imd_layer']
+                    });
+                    document.getElementById('info').innerHTML= 
+                        lsoa.length
+                        ?`<h2>${lsoa[0].properties.LSOA11NM}</h2>
+                            <p>Index Multiple Deprivation Decile:
+                            <strong><em>${lsoa[0].properties.london_imd_decile}</strong></em><br>
+                            <p>Index Multiple Deprivation rank in London:
+                            <strong><em>${lsoa[0].properties.london_imd_rank}</strong></em><br>
+                            <p>Index Multiple Deprivation rank in England:
+                            <strong><em>${lsoa[0].properties.england_imd_rank}</strong></em><br>                            
+                            </p>`
+                        : `<h2>Hover To see the Info!</h2>`;
+            });
+
+            // Add a popup instance
+            var popup = new mapboxgl.Popup({
+                closeButton: false,
+                closeOnClick: false
+            });
+
+            // Add mousemove event for ALDI points
+            map.on('mousemove', 'aldi_layer', (e) => {
+                map.getCanvas().style.cursor = 'pointer';
+                const features = map.queryRenderedFeatures(e.point, {
+                    layers: ['aldi_layer']
+                });
+
+                if (features.length > 0) {
+                    const feature = features[0];
+
+                    popup
+                        .setLngLat(feature.geometry.coordinates)
+                        .setHTML(`<h3>${feature.properties.name}</h3>`) // Change this based on your properties
+                        .addTo(map);
+                } else {
+                    popup.remove();
+                }
+            });
+            
+            // remove mousemove over ALDI
+            map.on('mouseleave', 'aldi_layer', () => {
+                map.getCanvas().style.cursor = '';
+                popup.remove();
+            });
+
+            
+            // Add mousemove event for lidl points
+            map.on('mousemove', 'lidl_layer', (e) => {
+                map.getCanvas().style.cursor = 'pointer';
+                const features = map.queryRenderedFeatures(e.point, {
+                    layers: ['lidl_layer']
+                });
+
+                if (features.length > 0) {
+                    const feature = features[0];
+
+                    popup
+                        .setLngLat(feature.geometry.coordinates)
+                        .setHTML(`<h3>${feature.properties.name}</h3>`) // Change this based on your properties
+                        .addTo(map);
+                } else {
+                    popup.remove();
+                }
+            });
+            
+            // remove mousemove over lidl
+            map.on('mouseleave', 'lidl_layer', () => {
+                map.getCanvas().style.cursor = '';
+                popup.remove();
+            });
+
+            // Add mousemove event for coop points
+            map.on('mousemove', 'coop_layer', (e) => {
+                map.getCanvas().style.cursor = 'pointer';
+                const features = map.queryRenderedFeatures(e.point, {
+                    layers: ['coop_layer']
+                });
+
+                if (features.length > 0) {
+                    const feature = features[0];
+
+                    popup
+                        .setLngLat(feature.geometry.coordinates)
+                        .setHTML(`<h3>${feature.properties.name}</h3>`) // Change this based on your properties
+                        .addTo(map);
+                } else {
+                    popup.remove();
+                }
+            });
+            
+            // remove mousemove over coop
+            map.on('mouseleave', 'coop_layer', () => {
+                map.getCanvas().style.cursor = '';
+                popup.remove();
+            });
+
+
+            // Add mousemove event for asda points
+            map.on('mousemove', 'asda_layer', (e) => {
+                map.getCanvas().style.cursor = 'pointer';
+                const features = map.queryRenderedFeatures(e.point, {
+                    layers: ['asda_layer']
+                });
+
+                if (features.length > 0) {
+                    const feature = features[0];
+
+                    popup
+                        .setLngLat(feature.geometry.coordinates)
+                        .setHTML(`<h3>${feature.properties.name}</h3>`) // Change this based on your properties
+                        .addTo(map);
+                } else {
+                    popup.remove();
+                }
+            });
+            
+            // remove mousemove over asda
+            map.on('mouseleave', 'asda_layer', () => {
+                map.getCanvas().style.cursor = '';
+                popup.remove();
+            });
+
+            // Add mousemove event for tesco points
+            map.on('mousemove', 'tesco_layer', (e) => {
+                map.getCanvas().style.cursor = 'pointer';
+                const features = map.queryRenderedFeatures(e.point, {
+                    layers: ['tesco_layer']
+                });
+
+                if (features.length > 0) {
+                    const feature = features[0];
+
+                    popup
+                        .setLngLat(feature.geometry.coordinates)
+                        .setHTML(`<h3>${feature.properties.name}</h3>`) // Change this based on your properties
+                        .addTo(map);
+                } else {
+                    popup.remove();
+                }
+            });
+            
+            // remove mousemove over tesco
+            map.on('mouseleave', 'tesco_layer', () => {
+                map.getCanvas().style.cursor = '';
+                popup.remove();
+            });
+
+            // Add mousemove event for sainsburys points
+            map.on('mousemove', 'sainsburys_layer', (e) => {
+                map.getCanvas().style.cursor = 'pointer';
+                const features = map.queryRenderedFeatures(e.point, {
+                    layers: ['sainsburys_layer']
+                });
+
+                if (features.length > 0) {
+                    const feature = features[0];
+
+                    popup
+                        .setLngLat(feature.geometry.coordinates)
+                        .setHTML(`<h3>${feature.properties.name}</h3>`) // Change this based on your properties
+                        .addTo(map);
+                } else {
+                    popup.remove();
+                }
+            });
+            
+            // remove mousemove over sainsburys
+            map.on('mouseleave', 'sainsburys_layer', () => {
+                map.getCanvas().style.cursor = '';
+                popup.remove();
+            });
+
+            // Add mousemove event for waitrose points
+            map.on('mousemove', 'waitrose_layer', (e) => {
+                map.getCanvas().style.cursor = 'pointer';
+                const features = map.queryRenderedFeatures(e.point, {
+                    layers: ['waitrose_layer']
+                });
+
+                if (features.length > 0) {
+                    const feature = features[0];
+
+                    popup
+                        .setLngLat(feature.geometry.coordinates)
+                        .setHTML(`<h3>${feature.properties.name}</h3>`) // Change this based on your properties
+                        .addTo(map);
+                } else {
+                    popup.remove();
+                }
+            });
+            
+            // remove mousemove over waitrose
+            map.on('mouseleave', 'waitrose_layer', () => {
+                map.getCanvas().style.cursor = '';
+                popup.remove();
+            });
+
+
+        
+        });
+    </script>
+
+</body>
+</html>
