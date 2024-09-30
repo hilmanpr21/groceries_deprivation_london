@@ -3,6 +3,8 @@ body { margin: 0; padding: 0; }
 
 h1{
     font-size: 18px;
+    margin-bottom: 0px;
+    line-height: normal;
 }
 
 h2{
@@ -11,7 +13,7 @@ h2{
 }
 
 h3 {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
 }
 
@@ -56,11 +58,11 @@ p {
     margin-top: 10px;
     padding: 10px;
     box-shadow: 0 1px 2px rgba(0 0 0 0.1);
-    line-height: 18px;
+    line-height: 16px;
     margin-bottom: 10px;
-    width: 350px;
+    width: 300px;
     margin-right: 10px;
-    background-color: #eeeee4;
+    background-color: #fffff1;
   }
   
   .legend-key {
